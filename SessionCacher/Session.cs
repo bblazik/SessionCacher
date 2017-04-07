@@ -21,6 +21,12 @@ namespace SessionCacher
             this.name = name;
         }
 
+        public Session(string name, List<Program> listOfPrograms)
+        {
+            this.name = name;
+            this.listOfPrograms = listOfPrograms;
+        }
+
         public Session(int id, string name)
         {
             this.id = id;

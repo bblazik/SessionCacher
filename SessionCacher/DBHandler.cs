@@ -86,7 +86,7 @@ namespace SessionCacher
             return programList;
         }
 
-        public List<Session> ReadSessions()
+        public List<Session> GetReadSessions()
         {
             var sessionList = new List<Session>();
             conn.Open();
@@ -102,7 +102,7 @@ namespace SessionCacher
             return sessionList;
         }
 
-        public List<Session> ReadSessionsWithProgramList()
+        public List<Session> GetSessionsWithProgramList()
         {
             var sessionList = new List<Session>();
             conn.Open();
@@ -145,11 +145,13 @@ namespace SessionCacher
         {
             conn.Open();
 
-            //foreach (var session in sessions)
-          //  {
-                cmd.CommandText = "DELETE FROM Session Where Id == "+ session.Id ; //parameters (Name,Gender). // values ('alex', 'male'); 
-                cmd.ExecuteNonQuery();
-          //  }
+            //Delete session
+            cmd.CommandText = "DELETE FROM Session Where Id == "+ session.Id ; //parameters (Name,Gender). // values ('alex', 'male'); 
+            cmd.ExecuteNonQuery();
+
+            //Delete related programs
+            cmd.CommandText = "DELETE FROM Program Where SessionId == " + session.Id; //parameters (Name,Gender). // values ('alex', 'male'); 
+            cmd.ExecuteNonQuery();
 
             conn.Close();
         }
