@@ -1,0 +1,13 @@
+c:\users\barte_000\documents\visual studio 2015\Projects\SessionCacher\SessionCacher\bin\x86\Debug\SessionCacher.exe.config
+c:\users\barte_000\documents\visual studio 2015\Projects\SessionCacher\SessionCacher\bin\x86\Debug\SessionCacher.exe
+c:\users\barte_000\documents\visual studio 2015\Projects\SessionCacher\SessionCacher\bin\x86\Debug\SessionCacher.pdb
+c:\users\barte_000\documents\visual studio 2015\Projects\SessionCacher\SessionCacher\obj\x86\Debug\MainWindow.g.cs
+c:\users\barte_000\documents\visual studio 2015\Projects\SessionCacher\SessionCacher\obj\x86\Debug\App.g.cs
+c:\users\barte_000\documents\visual studio 2015\Projects\SessionCacher\SessionCacher\obj\x86\Debug\SessionCacher_MarkupCompile.cache
+c:\users\barte_000\documents\visual studio 2015\Projects\SessionCacher\SessionCacher\obj\x86\Debug\SessionCacher_MarkupCompile.lref
+c:\users\barte_000\documents\visual studio 2015\Projects\SessionCacher\SessionCacher\obj\x86\Debug\MainWindow.baml
+c:\users\barte_000\documents\visual studio 2015\Projects\SessionCacher\SessionCacher\obj\x86\Debug\SessionCacher.g.resources
+c:\users\barte_000\documents\visual studio 2015\Projects\SessionCacher\SessionCacher\obj\x86\Debug\SessionCacher.Properties.Resources.resources
+c:\users\barte_000\documents\visual studio 2015\Projects\SessionCacher\SessionCacher\obj\x86\Debug\SessionCacher.csproj.GenerateResource.Cache
+c:\users\barte_000\documents\visual studio 2015\Projects\SessionCacher\SessionCacher\obj\x86\Debug\SessionCacher.exe
+c:\users\barte_000\documents\visual studio 2015\Projects\SessionCacher\SessionCacher\obj\x86\Debug\SessionCacher.pdb
