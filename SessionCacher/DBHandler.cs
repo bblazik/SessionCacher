@@ -49,7 +49,7 @@ namespace SessionCacher
         {
             conn.Open();
 
-            cmd.CommandText = "INSERT INTO Session (SessionName) values('" + session.Name + "')" ; //parameters (Name,Gender). // values ('alex', 'male'); 
+            cmd.CommandText = "INSERT INTO Session (SessionName) values('" + session.name + "')" ; //parameters (Name,Gender). // values ('alex', 'male'); 
             cmd.ExecuteNonQuery();
 
             var id = conn.LastInsertRowId;
@@ -75,7 +75,7 @@ namespace SessionCacher
             if (conn.State == ConnectionState.Closed) conn.Open();
             else closeFlag = false;
 
-            cmd.CommandText = "SELECT * from Session join Program on Session.id == Program.SessionId and Session.Id == " + session.Id;
+            cmd.CommandText = "SELECT * from Session join Program on Session.id == Program.SessionId and Session.Id == " + session.id;
             SQLiteDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
@@ -121,7 +121,7 @@ namespace SessionCacher
             foreach (var session in sessionList)
             {
                 var programList = new List<Program>();
-                cmd.CommandText = "SELECT * from Session join Program on Session.id == Program.SessionId and Session.Id == " + session.Id;
+                cmd.CommandText = "SELECT * from Session join Program on Session.id == Program.SessionId and Session.Id == " + session.id;
                 reader = cmd.ExecuteReader();
 
                 while (reader.Read())
@@ -141,16 +141,26 @@ namespace SessionCacher
             return sessionList;
         }
 
-        public void DeleteSessions(Session session)
+        public void DeleteSession(Session session)
         {
             conn.Open();
 
             //Delete session
-            cmd.CommandText = "DELETE FROM Session Where Id == "+ session.Id ; //parameters (Name,Gender). // values ('alex', 'male'); 
+            cmd.CommandText = "DELETE FROM Session Where Id == "+ session.id ;
             cmd.ExecuteNonQuery();
 
             //Delete related programs
-            cmd.CommandText = "DELETE FROM Program Where SessionId == " + session.Id; //parameters (Name,Gender). // values ('alex', 'male'); 
+            cmd.CommandText = "DELETE FROM Program Where SessionId == " + session.id; 
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+        public void DeleteProgram(Program program)
+        {
+            conn.Open();
+
+            cmd.CommandText = "DELETE FROM Program Where Id == " + program.id;
             cmd.ExecuteNonQuery();
 
             conn.Close();

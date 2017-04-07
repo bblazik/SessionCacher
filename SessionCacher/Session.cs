@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,10 +9,12 @@ namespace SessionCacher
 {
     public class Session
     {
-        private int id;
-        private string name;
+        public int id;
+        public string name;
         public List<Program> listOfPrograms { get; set; }
 
+
+        // Constructors
         public Session()
         {
         }
@@ -27,24 +30,27 @@ namespace SessionCacher
             this.listOfPrograms = listOfPrograms;
         }
 
+        public Session(string name, List<Process> listOProcesses)
+        {
+            this.name = name;
+            this.listOfPrograms = ConvertProcesstoPrograms(listOProcesses);
+        }
+
         public Session(int id, string name)
         {
             this.id = id;
             this.name = name;
         }
+        // End of constructors.
 
-        public int Id
+        public List<Program> ConvertProcesstoPrograms(List<Process> listOfProcesses)
         {
-            get { return id; }
-            set { id = value; }
+            var programList = new List<Program>();
+            foreach (var process in listOfProcesses)
+            {
+                programList.Add(new Program(process.MainWindowTitle, "path", "",id));
+            }
+            return programList;
         }
-
-        public string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
-
-
     }
 }

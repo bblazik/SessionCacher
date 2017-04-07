@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -30,20 +31,25 @@ namespace SessionCacher
         private List<Process> processes;
         private DBHandler dbHandler;
         private List<Session> sessions;
+        private Session currentSession;
 
         public MainWindow()
         {
             InitializeComponent();
-            var c = new CurrentProgram();
             dbHandler = new DBHandler();
             //TODO initilize ALL LIST
-            sessions = new List<Session>();
-            GetCurrentSession();
-
-            sessions = getSessionsFromDB();
-            addToSessionsTab(sessions);
+            refreshSessions();
             
             //TODO ADD REVERT ACTION.            
+        }
+
+        public void refreshSessions()
+        {
+            sessions = new List<Session>();
+            sessions.Add(GetCurrentSession());
+            sessions.AddRange(getSessionsFromDB());
+            addToSessionsTab(sessions);
+            SavedSessions.SelectedIndex = 0;
         }
 
         public List<Session> getSessionsFromDB()
@@ -56,7 +62,7 @@ namespace SessionCacher
             SavedSessions.Items.Clear();
             foreach (var session in sessions)
             {
-                SavedSessions.Items.Add(session.Name);
+                SavedSessions.Items.Add(session.name);
             }
         }
 
@@ -69,31 +75,15 @@ namespace SessionCacher
             }
         }
 
-
-        public void GetCurrentSession()
+        public Session GetCurrentSession()
         {
             processes = Process.GetProcesses().ToList();
             processes.RemoveAll(x => string.IsNullOrEmpty(x.MainWindowTitle));
-            foreach (var p in processes)
-            {
-                if (!string.IsNullOrEmpty(p.MainWindowTitle))
-                {
-                    OpenedPrograms.Items.Add(p.MainModule.FileName);
-                }
-            }
-            sessions.Add(new Session("Current session", ConvertProcesstoPrograms(processes)));
+
+            return currentSession = new Session("Current session", (processes));
         }
 
-        //TODO move to Session. Add argument id.
-        public List<Program> ConvertProcesstoPrograms(List<Process> listOfProcesses)
-        {
-            var programList = new List<Program>();
-            foreach (var process in listOfProcesses)
-            {
-                programList.Add(new Program(process.MainWindowTitle, "path", ""));
-            }
-            return programList;
-        }
+        // EVENTS.
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
@@ -115,19 +105,19 @@ namespace SessionCacher
                 //TODO success dialog.    
             }
 
-            sessions = getSessionsFromDB();
-            addToSessionsTab(sessions);
+            refreshSessions();
         }
 
         private void remove_Click(object sender, RoutedEventArgs e)
         {
-            if (SavedSessions.SelectedIndex != -1)
+            if (SavedSessions.SelectedIndex != -1 && SavedSessions.SelectedIndex != 0)
             {
                 var index = SavedSessions.SelectedIndex;
                 var item = sessions[SavedSessions.SelectedIndex];
+                
                 //Update DB
-                dbHandler.DeleteSessions(item);
-                //TODO Remove programs aswell.
+                dbHandler.DeleteSession(item);
+                
                 //Update view
                 SavedSessions.Items.RemoveAt(index);
 
@@ -138,7 +128,8 @@ namespace SessionCacher
             else if (OpenedPrograms.SelectedIndex != -1) //TODO if current session.
             {
                 var index = OpenedPrograms.SelectedIndex;
-                
+                var sessionIndex = SavedSessions.SelectedIndex;
+
                 //update controler
                 processes.RemoveAt(index);
 
@@ -150,15 +141,14 @@ namespace SessionCacher
         private void SavedSessions_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var index = SavedSessions.SelectedIndex;
-            if (index != -1) //TODO Single responsibility principle. Change it. -1 - nothing selected.
-            {               
-                OpenedPrograms.Items.Clear();
-
-                foreach (var program in sessions[index].listOfPrograms)
-                {
-                    OpenedPrograms.Items.Add(program.Name);
-                }
+            
+            OpenedPrograms.Items.Clear();
+            if (index == -1) return;
+            foreach (var program in sessions[index].listOfPrograms)
+            {
+                OpenedPrograms.Items.Add(program.Name);
             }
         }
+
     }
 }
