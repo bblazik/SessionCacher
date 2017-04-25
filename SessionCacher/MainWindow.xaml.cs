@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.Entity.Migrations.History;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -20,18 +21,22 @@ using Path = System.IO.Path;
 using System.Data.SQLite;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using System.Text.RegularExpressions;
+using System.Windows.Automation;
+using MahApps.Metro.Controls;
 
 namespace SessionCacher
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         private List<Process> processes;
         private DBHandler dbHandler;
         private List<Session> sessions;
         private Session currentSession;
+        private Session undoSession;
 
         public MainWindow()
         {
@@ -39,7 +44,7 @@ namespace SessionCacher
             dbHandler = new DBHandler();
             //TODO initilize ALL LIST
             refreshSessions();
-            
+
             //TODO ADD REVERT ACTION.            
         }
 
@@ -78,34 +83,79 @@ namespace SessionCacher
         public Session GetCurrentSession()
         {
             processes = Process.GetProcesses().ToList();
-            processes.RemoveAll(x => string.IsNullOrEmpty(x.MainWindowTitle));
+
+            processes.RemoveAll(x => string.IsNullOrEmpty(x.MainWindowTitle) 
+            || Regex.IsMatch(x.MainModule.FileName, ":\\\\WINDOWS") 
+            || Regex.IsMatch(x.MainModule.FileName, "WindowsApps")
+            || Regex.IsMatch(x.MainModule.FileName, System.AppDomain.CurrentDomain.FriendlyName)) ;
+            
+
+            processes.RemoveAll(x => string.IsNullOrEmpty(x.MainWindowTitle) && x.MainWindowHandle == IntPtr.Zero);
+            GetActiveTabUrl();
+           //var his = 
 
             return currentSession = new Session("Current session", (processes));
+        }
+
+        public static string GetActiveTabUrl()
+        {
+            Process[] procsChrome = Process.GetProcessesByName("chrome");
+
+            if (procsChrome.Length <= 0)
+                return null;
+
+            foreach (Process proc in procsChrome)
+            {
+                // the chrome process must have a window 
+                if (proc.MainWindowHandle == IntPtr.Zero)
+                    continue;
+
+                // to find the tabs we first need to locate something reliable - the 'New Tab' button 
+                AutomationElement root = AutomationElement.FromHandle(proc.MainWindowHandle);
+                var SearchBar = root.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.NameProperty, "Address and search bar"));
+                if (SearchBar != null)
+                    return (string)SearchBar.GetCurrentPropertyValue(ValuePatternIdentifiers.ValueProperty);
+            }
+
+            return null;
+        }
+
+        private void SaveSession(Session session)
+        {
+            //Create session
+            //TODO dialog box, czy dodac do biezącej sesji etc.
+            // Configure the message box to be displayed
+            var dialog = new CustomDialogBox();
+            if (dialog.ShowDialog() == true)
+            {
+                //MessageBox.Show("You said: " + dialog.ResponseText);
+                session.name = dialog.ResponseText;
+            }
+
+            var id = dbHandler.InsertSessionToTable(session);
+            //add to session
+            foreach (var process in processes)
+            {
+                dbHandler.InsertProgramToTable(new Program(process.MainWindowTitle, process.MainModule.FileName, process.StartInfo.Arguments, id));
+                
+                //TODO process.MainModule.FileName get privilages.
+                //TODO Get Arguments
+                //TODO success dialog.    
+            }
+            MessageBox.Show("Success");
+            refreshSessions();
         }
 
         // EVENTS.
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            OpenedPrograms.Items.Clear();
-            GetCurrentSession();
+            refreshSessions();
         }
 
         private void save_Click_1(object sender, RoutedEventArgs e)
         {
-            //Create session
-            //TODO dialog box, czy dodac do biezącej sesji etc.
-            var id = dbHandler.InsertSessionToTable(new Session("CokolwiekNarazie"));
-            //add to session
-            foreach (var process in processes)
-            {
-                dbHandler.InsertProgramToTable(new Program(process.MainWindowTitle,"path", "",id));
-                //TODO process.MainModule.FileName get privilages.
-                //TODO Get Arguments
-                //TODO success dialog.    
-            }
-
-            refreshSessions();
+            SaveSession(new Session());
         }
 
         private void remove_Click(object sender, RoutedEventArgs e)
@@ -114,10 +164,10 @@ namespace SessionCacher
             {
                 var index = SavedSessions.SelectedIndex;
                 var item = sessions[SavedSessions.SelectedIndex];
-                
+                undoSession = item;
                 //Update DB
                 dbHandler.DeleteSession(item);
-                
+
                 //Update view
                 SavedSessions.Items.RemoveAt(index);
 
@@ -141,14 +191,37 @@ namespace SessionCacher
         private void SavedSessions_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var index = SavedSessions.SelectedIndex;
-            
-            OpenedPrograms.Items.Clear();
             if (index == -1) return;
+
+            OpenedPrograms.Items.Clear();
             foreach (var program in sessions[index].listOfPrograms)
             {
                 OpenedPrograms.Items.Add(program.Name);
             }
         }
 
+        private void Revert_OnClick(object sender, RoutedEventArgs e)
+        {
+            SaveSession(undoSession);
+        }
+
+        private void Run_OnClick(object sender, RoutedEventArgs e)
+        {
+            var index = SavedSessions.SelectedIndex;
+            var session = sessions[index];
+            foreach (var program in session.listOfPrograms)
+            {
+                try
+                {
+                    Process.Start(program.Path, program.Arguments ?? "");
+                }
+                catch (Exception)
+                {                    
+                    throw;
+                }
+                
+            }
+            
+        }
     }
 }

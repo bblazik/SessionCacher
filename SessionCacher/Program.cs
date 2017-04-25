@@ -10,8 +10,8 @@ namespace SessionCacher
     {
         public string id { get; set; }
         public string Name { get; set; }
-        private string Path { get; set; }
-        private string Arguments { get; set; }
+        public string Path { get; set; }
+        public string Arguments { get; set; }
         private int SessionID { get; set; }
 
         public Program(string name, string path, string arguments)

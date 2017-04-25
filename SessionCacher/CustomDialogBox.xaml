@@ -1,0 +1,14 @@
+﻿<Window x:Class="SessionCacher.CustomDialogBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SessionCacher"
+        mc:Ignorable="d"
+        Title="CustomDialogBox" Height="104.779" Width="221.691">
+    <StackPanel>
+        <TextBlock Text="Enter some text" />
+        <TextBox x:Name="ResponseTextBox" />
+        <Button Content="OK" Click="ButtonBase_OnClick"/>
+    </StackPanel>
+</Window>
