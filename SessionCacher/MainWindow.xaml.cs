@@ -24,12 +24,11 @@ using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Windows.Automation;
 using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
+using SessionCacher.Controlers;
 
 namespace SessionCacher
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : MetroWindow
     {
         private List<Process> processes;
@@ -81,17 +80,13 @@ namespace SessionCacher
         }
 
         public Session GetCurrentSession()
-        {
+        {   //Get all procesees
             processes = Process.GetProcesses().ToList();
 
-            processes.RemoveAll(x => string.IsNullOrEmpty(x.MainWindowTitle) 
-            || Regex.IsMatch(x.MainModule.FileName, ":\\\\WINDOWS") 
-            || Regex.IsMatch(x.MainModule.FileName, "WindowsApps")
-            || Regex.IsMatch(x.MainModule.FileName, System.AppDomain.CurrentDomain.FriendlyName)) ;
-            
+            //Removes all procceses that violates the restrictions
+            processes.RemoveAll(Restrictions.CheckRestrictions);
 
-            processes.RemoveAll(x => string.IsNullOrEmpty(x.MainWindowTitle) && x.MainWindowHandle == IntPtr.Zero);
-            GetActiveTabUrl();
+            //GetActiveTabUrl();
            //var his = 
 
             return currentSession = new Session("Current session", (processes));
@@ -120,17 +115,11 @@ namespace SessionCacher
             return null;
         }
 
-        private void SaveSession(Session session)
+        private async void SaveSession(Session session)
         {
-            //Create session
-            //TODO dialog box, czy dodac do biezącej sesji etc.
-            // Configure the message box to be displayed
-            var dialog = new CustomDialogBox();
-            if (dialog.ShowDialog() == true)
-            {
-                //MessageBox.Show("You said: " + dialog.ResponseText);
-                session.name = dialog.ResponseText;
-            }
+        
+            session.name = await this.ShowInputAsync("Title", "enter some text");
+
 
             var id = dbHandler.InsertSessionToTable(session);
             //add to session
@@ -142,7 +131,7 @@ namespace SessionCacher
                 //TODO Get Arguments
                 //TODO success dialog.    
             }
-            MessageBox.Show("Success");
+            await this.ShowMessageAsync("Success", "You will find your session on session list");
             refreshSessions();
         }
 

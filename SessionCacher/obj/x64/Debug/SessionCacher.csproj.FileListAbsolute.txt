@@ -20,8 +20,6 @@ C:\Users\barte_000\documents\visual studio 2015\Projects\SessionCacher\SessionCa
 C:\Users\barte_000\documents\visual studio 2015\Projects\SessionCacher\SessionCacher\bin\x64\Debug\EntityFramework.xml
 C:\Users\barte_000\documents\visual studio 2015\Projects\SessionCacher\SessionCacher\bin\x64\Debug\EntityFramework.SqlServer.xml
 C:\Users\barte_000\documents\visual studio 2015\Projects\SessionCacher\SessionCacher\bin\x64\Debug\System.Data.SQLite.xml
-C:\Users\barte_000\documents\visual studio 2015\Projects\SessionCacher\SessionCacher\obj\x64\Debug\CustomDialogBox.g.cs
-C:\Users\barte_000\documents\visual studio 2015\Projects\SessionCacher\SessionCacher\obj\x64\Debug\CustomDialogBox.baml
 C:\Users\barte_000\Documents\Visual Studio 2015\Projects\SessionCacher\SessionCacher\bin\x64\Debug\Interop.UIAutomationClient.dll
 C:\Users\barte_000\Documents\Visual Studio 2015\Projects\SessionCacher\SessionCacher\bin\x64\Debug\Microsoft.TeamFoundation.Controls.dll
 C:\Users\barte_000\Documents\Visual Studio 2015\Projects\SessionCacher\SessionCacher\bin\x64\Debug\Microsoft.TeamFoundation.DeleteTeamProject.dll
