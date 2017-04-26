@@ -50,7 +50,6 @@ namespace SessionCacher
         public void refreshSessions()
         {
             sessions = new List<Session>();
-            //Ugly hack for CurrentSession
             CurrentSession.DataContext = GetCurrentSession();
             
             sessions.AddRange(getSessionsFromDB());
@@ -61,24 +60,6 @@ namespace SessionCacher
         public List<Session> getSessionsFromDB()
         {
             return dbHandler.GetSessionsWithProgramList();
-        }
-
-        public void addToSessionsTab(List<Session> sessions)
-        {
-            SavedSessions.Items.Clear();
-            foreach (var session in sessions)
-            {
-                SavedSessions.Items.Add(session.name);
-            }
-        }
-
-        public void addToProgramsTab(Session session)
-        {
-            OpenedPrograms.Items.Clear();
-            foreach (var program in session.listOfPrograms)
-            {
-                OpenedPrograms.Items.Add(program);
-            }
         }
 
         public Session GetCurrentSession()
@@ -136,11 +117,7 @@ namespace SessionCacher
 
         private void refreshCurrentSession()
         {
-            OpenedPrograms.Items.Clear();
-            foreach (var program in GetCurrentSession().listOfPrograms)
-            {
-                OpenedPrograms.Items.Add(program.Name);
-            }
+            OpenedPrograms.ItemsSource = GetCurrentSession().listOfPrograms;
         }
 
         // EVENTS.
@@ -188,13 +165,7 @@ namespace SessionCacher
         private void SavedSessions_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var index = SavedSessions.SelectedIndex;
-            if (index == -1) return;
-
-            OpenedPrograms.Items.Clear();
-            foreach (var program in sessions[index].listOfPrograms)
-            {
-                OpenedPrograms.Items.Add(program.Name);
-            }
+            OpenedPrograms.ItemsSource = sessions[index].listOfPrograms;
         }
 
         private async void Revert_OnClick(object sender, RoutedEventArgs e)

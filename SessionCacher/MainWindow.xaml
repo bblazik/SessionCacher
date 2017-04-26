@@ -13,9 +13,18 @@
         <Button x:Name="CurrentSession" Margin="10,0,381,275" Grid.ColumnSpan="2" Height="44" VerticalAlignment="Bottom" Click="CurrentSession_OnClick">
             <TextBlock Text="{Binding name, Mode=TwoWay}" FontWeight="Bold" />
         </Button>
-        <ListBox x:Name="OpenedPrograms" HorizontalAlignment="Left" Height="270" Margin="80.662,49,0,0" VerticalAlignment="Top" Width="376" Grid.Column="1">
-
-        </ListBox>
+        <ListView x:Name="OpenedPrograms" SelectionChanged="SavedSessions_OnSelectionChanged" Margin="81,0,0,10" Height="260" VerticalAlignment="Bottom" Grid.Column="1" HorizontalAlignment="Left" Width="366">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <WrapPanel >
+                        <TextBlock Text="{Binding Name, Mode=TwoWay}" FontWeight="Bold" />
+                        <Button x:Name="dupa" HorizontalAlignment="Right" Style="{DynamicResource MetroCircleButtonStyle}" >
+                            <Image Source="pic/appbar.checkmark.cross.png" Height="20"/>
+                        </Button>
+                    </WrapPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
         <ListView x:Name="SavedSessions" SelectionChanged="SavedSessions_OnSelectionChanged" Margin="10,0,381,10" Grid.ColumnSpan="2" Height="260" VerticalAlignment="Bottom">
             <ListView.ItemTemplate>
                 <DataTemplate>
