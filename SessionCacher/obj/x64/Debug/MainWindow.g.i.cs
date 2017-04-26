@@ -84,21 +84,13 @@ namespace SessionCacher {
         
         #line 42 "..\..\..\MainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
-        internal System.Windows.Controls.Button remove;
-        
-        #line default
-        #line hidden
-        
-        
-        #line 43 "..\..\..\MainWindow.xaml"
-        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.Button revert;
         
         #line default
         #line hidden
         
         
-        #line 44 "..\..\..\MainWindow.xaml"
+        #line 43 "..\..\..\MainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.Button run;
         
@@ -181,27 +173,18 @@ namespace SessionCacher {
             #line hidden
             return;
             case 6:
-            this.remove = ((System.Windows.Controls.Button)(target));
-            
-            #line 42 "..\..\..\MainWindow.xaml"
-            this.remove.Click += new System.Windows.RoutedEventHandler(this.remove_Click);
-            
-            #line default
-            #line hidden
-            return;
-            case 7:
             this.revert = ((System.Windows.Controls.Button)(target));
             
-            #line 43 "..\..\..\MainWindow.xaml"
+            #line 42 "..\..\..\MainWindow.xaml"
             this.revert.Click += new System.Windows.RoutedEventHandler(this.Revert_OnClick);
             
             #line default
             #line hidden
             return;
-            case 8:
+            case 7:
             this.run = ((System.Windows.Controls.Button)(target));
             
-            #line 44 "..\..\..\MainWindow.xaml"
+            #line 43 "..\..\..\MainWindow.xaml"
             this.run.Click += new System.Windows.RoutedEventHandler(this.Run_OnClick);
             
             #line default

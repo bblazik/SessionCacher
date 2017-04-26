@@ -39,7 +39,6 @@
         </ListView>
         <Button x:Name="refresh" Content="Refresh" HorizontalAlignment="Left" Margin="371.662,24,0,0" VerticalAlignment="Top" Width="75" Click="button_Click" Grid.Column="1"/>
         <Button x:Name="save" HorizontalAlignment="Left" Margin="291.662,24,0,0" VerticalAlignment="Top" Width="75" Click="save_Click_1" Height="20" Content="save" Grid.Column="1"></Button>
-        <Button x:Name="remove" Content="remove" HorizontalAlignment="Left" Margin="211.662,24,0,0" VerticalAlignment="Top" Width="75" Background="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}" Click="remove_Click" Grid.Column="1"/>
         <Button x:Name="revert" Content="revert" HorizontalAlignment="Left" Margin="131.662,24,0,0" VerticalAlignment="Top" Width="75" Click="Revert_OnClick" Grid.Column="1"/>
         <Button x:Name="run" Content="run" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="179.662,0,0,0" Click="Run_OnClick" Grid.Column="1"/>
 

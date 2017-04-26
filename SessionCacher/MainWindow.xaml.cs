@@ -132,36 +132,6 @@ namespace SessionCacher
             SaveSession(new Session());
         }
 
-        private void remove_Click(object sender, RoutedEventArgs e)
-        {
-            if (SavedSessions.SelectedIndex != -1 && SavedSessions.SelectedIndex != 0)
-            {
-                var index = SavedSessions.SelectedIndex;
-                var item = sessions[SavedSessions.SelectedIndex];
-                undoSession = item;
-                //Update DB
-                dbHandler.DeleteSession(item);
-
-                //Update view
-                SavedSessions.Items.RemoveAt(index);
-
-                //update controler
-                sessions.RemoveAt(index);
-                //TODO do it better https://msdn.microsoft.com/pl-pl/library/ms748365(v=vs.110).aspx? 
-            }
-            else if (OpenedPrograms.SelectedIndex != -1) //TODO if current session.
-            {
-                var index = OpenedPrograms.SelectedIndex;
-                var sessionIndex = SavedSessions.SelectedIndex;
-
-                //update controler
-                processes.RemoveAt(index);
-
-                //update view
-                OpenedPrograms.Items.RemoveAt(index);
-            }
-        }
-
         private void SavedSessions_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var index = SavedSessions.SelectedIndex;
