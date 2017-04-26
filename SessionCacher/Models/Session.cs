@@ -10,9 +10,9 @@ namespace SessionCacher
     public class Session
     {
         public int id;
-        public string name;
+        public string name { get; set; }
         public List<Program> listOfPrograms { get; set; }
-
+        //TODO count and show number of proceses.
 
         // Constructors
         public Session()

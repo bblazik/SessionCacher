@@ -199,6 +199,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -230,6 +231,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="pic\appbar.checkmark.cross.png" />
     <Content Include="scripts\history.js\amplify.store.js" />
     <Content Include="scripts\history.js\history.adapter.dojo.js" />
     <Content Include="scripts\history.js\history.adapter.jquery.js" />

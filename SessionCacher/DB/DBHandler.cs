@@ -13,7 +13,7 @@ namespace SessionCacher
     {
         private SQLiteConnection conn;
         private SQLiteCommand cmd;
-
+        //TODO REFACTOR open connection at contruction of DB and close at destroy
         public DBHandler()
         {
             if (!System.IO.File.Exists("user-data.db3"))

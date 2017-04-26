@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data.Entity.Migrations.History;
 using System.Diagnostics;
@@ -19,12 +21,14 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Path = System.IO.Path;
 using System.Data.SQLite;
+using System.Runtime.CompilerServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Windows.Automation;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using SessionCacher.Annotations;
 using SessionCacher.Controlers;
 
 namespace SessionCacher
@@ -34,26 +38,24 @@ namespace SessionCacher
         private List<Process> processes;
         private DBHandler dbHandler;
         private List<Session> sessions;
-        private Session currentSession;
         private Session undoSession;
-
+        //TODO OBSERVABLE COLLECTION + DATABINDING!
         public MainWindow()
         {
             InitializeComponent();
             dbHandler = new DBHandler();
-            //TODO initilize ALL LIST
-            refreshSessions();
-
-            //TODO ADD REVERT ACTION.            
+            refreshSessions(); 
         }
 
         public void refreshSessions()
         {
             sessions = new List<Session>();
-            sessions.Add(GetCurrentSession());
+            //Ugly hack for CurrentSession
+            CurrentSession.DataContext = GetCurrentSession();
+            
             sessions.AddRange(getSessionsFromDB());
-            addToSessionsTab(sessions);
-            SavedSessions.SelectedIndex = 0;
+            SavedSessions.ItemsSource = sessions;
+            refreshCurrentSession();
         }
 
         public List<Session> getSessionsFromDB()
@@ -80,16 +82,16 @@ namespace SessionCacher
         }
 
         public Session GetCurrentSession()
-        {   //Get all procesees
+        {   
+            //Get all procesees
             processes = Process.GetProcesses().ToList();
 
-            //Removes all procceses that violates the restrictions
+            //Removes all procceses that violates the restrictions //TODO workaround privilages.
             processes.RemoveAll(Restrictions.CheckRestrictions);
 
             //GetActiveTabUrl();
-           //var his = 
-
-            return currentSession = new Session("Current session", (processes));
+     
+            return new Session("Current session", (processes));
         }
 
         public static string GetActiveTabUrl()
@@ -117,9 +119,7 @@ namespace SessionCacher
 
         private async void SaveSession(Session session)
         {
-        
             session.name = await this.ShowInputAsync("Title", "enter some text");
-
 
             var id = dbHandler.InsertSessionToTable(session);
             //add to session
@@ -129,10 +129,18 @@ namespace SessionCacher
                 
                 //TODO process.MainModule.FileName get privilages.
                 //TODO Get Arguments
-                //TODO success dialog.    
             }
             await this.ShowMessageAsync("Success", "You will find your session on session list");
             refreshSessions();
+        }
+
+        private void refreshCurrentSession()
+        {
+            OpenedPrograms.Items.Clear();
+            foreach (var program in GetCurrentSession().listOfPrograms)
+            {
+                OpenedPrograms.Items.Add(program.Name);
+            }
         }
 
         // EVENTS.
@@ -189,9 +197,19 @@ namespace SessionCacher
             }
         }
 
-        private void Revert_OnClick(object sender, RoutedEventArgs e)
+        private async void Revert_OnClick(object sender, RoutedEventArgs e)
         {
-            SaveSession(undoSession);
+            var id = dbHandler.InsertSessionToTable(undoSession);
+            //add to session
+            foreach (var program in undoSession.listOfPrograms)
+            {
+                dbHandler.InsertProgramToTable(program);
+
+                //TODO process.MainModule.FileName get privilages.
+                //TODO Get Arguments
+            }
+            await this.ShowMessageAsync("Success", "You will find your session on session list");
+            refreshSessions();
         }
 
         private void Run_OnClick(object sender, RoutedEventArgs e)
@@ -211,6 +229,11 @@ namespace SessionCacher
                 
             }
             
+        }
+
+        private void CurrentSession_OnClick(object sender, RoutedEventArgs e)
+        {
+            refreshCurrentSession();
         }
     }
 }

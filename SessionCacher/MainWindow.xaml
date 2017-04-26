@@ -5,13 +5,34 @@
         xmlns:local="clr-namespace:SessionCacher"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <ListBox x:Name="SavedSessions" HorizontalAlignment="Left" Height="270" VerticalAlignment="Top" Width="136" Margin="0,49,0,0" SelectionChanged="SavedSessions_OnSelectionChanged"/>
-        <ListBox x:Name="OpenedPrograms" HorizontalAlignment="Left" Height="270" Margin="141,49,0,0" VerticalAlignment="Top" Width="376"/>
-        <Button x:Name="refresh" Content="Refresh" HorizontalAlignment="Left" Margin="395,24,0,0" VerticalAlignment="Top" Width="75" Click="button_Click"/>
-        <Button x:Name="save" HorizontalAlignment="Left" Margin="315,24,0,0" VerticalAlignment="Top" Width="75" Click="save_Click_1" Height="20" Content="save"></Button>
-        <Button x:Name="remove" Content="remove" HorizontalAlignment="Left" Margin="235,24,0,0" VerticalAlignment="Top" Width="75" Background="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}" Click="remove_Click"/>
-        <Button x:Name="revert" Content="revert" HorizontalAlignment="Left" Margin="141,24,0,0" VerticalAlignment="Top" Width="75" Click="Revert_OnClick"/>
-        <Button x:Name="run" Content="run" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="61,24,0,0" Click="Run_OnClick"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="60*"/>
+            <ColumnDefinition Width="457*"/>
+        </Grid.ColumnDefinitions>
+
+        <Button x:Name="CurrentSession" Margin="10,0,381,275" Grid.ColumnSpan="2" Height="44" VerticalAlignment="Bottom" Click="CurrentSession_OnClick">
+            <TextBlock Text="{Binding name, Mode=TwoWay}" FontWeight="Bold" />
+        </Button>
+        <ListBox x:Name="OpenedPrograms" HorizontalAlignment="Left" Height="270" Margin="80.662,49,0,0" VerticalAlignment="Top" Width="376" Grid.Column="1">
+
+        </ListBox>
+        <ListView x:Name="SavedSessions" SelectionChanged="SavedSessions_OnSelectionChanged" Margin="10,0,381,10" Grid.ColumnSpan="2" Height="260" VerticalAlignment="Bottom">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <WrapPanel >
+                        <TextBlock Text="{Binding name, Mode=TwoWay}" FontWeight="Bold" />
+                        <Button x:Name="dupa" HorizontalAlignment="Right" Style="{DynamicResource MetroCircleButtonStyle}" >
+                            <Image Source="pic/appbar.checkmark.cross.png" Height="20"/>
+                        </Button>
+                    </WrapPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Button x:Name="refresh" Content="Refresh" HorizontalAlignment="Left" Margin="371.662,24,0,0" VerticalAlignment="Top" Width="75" Click="button_Click" Grid.Column="1"/>
+        <Button x:Name="save" HorizontalAlignment="Left" Margin="291.662,24,0,0" VerticalAlignment="Top" Width="75" Click="save_Click_1" Height="20" Content="save" Grid.Column="1"></Button>
+        <Button x:Name="remove" Content="remove" HorizontalAlignment="Left" Margin="211.662,24,0,0" VerticalAlignment="Top" Width="75" Background="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}" Click="remove_Click" Grid.Column="1"/>
+        <Button x:Name="revert" Content="revert" HorizontalAlignment="Left" Margin="131.662,24,0,0" VerticalAlignment="Top" Width="75" Click="Revert_OnClick" Grid.Column="1"/>
+        <Button x:Name="run" Content="run" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="179.662,0,0,0" Click="Run_OnClick" Grid.Column="1"/>
 
     </Grid>
 </Controls:MetroWindow>
