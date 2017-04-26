@@ -232,6 +232,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="pic\appbar.checkmark.cross.png" />
+    <Resource Include="pic\close.png" />
+    <Resource Include="pic\close-circle.png" />
+    <Resource Include="pic\cc.png" />
     <Content Include="scripts\history.js\amplify.store.js" />
     <Content Include="scripts\history.js\history.adapter.dojo.js" />
     <Content Include="scripts\history.js\history.adapter.jquery.js" />

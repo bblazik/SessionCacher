@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using SessionCacher.Annotations;
 
 namespace SessionCacher
 {
-    public class Program
+    public class Program : INotifyPropertyChanged
     {
         public string id { get; set; }
         public string Name { get; set; }
@@ -41,6 +44,14 @@ namespace SessionCacher
         public string GetValues()
         {
             return string.Join("','", Name, Path, Arguments, SessionID);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

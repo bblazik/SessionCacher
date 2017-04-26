@@ -96,7 +96,7 @@ namespace SessionCacher
 
         private async void SaveSession(Session session)
         {
-            session.name = await this.ShowInputAsync("Title", "enter some text");
+            session.name = await this.ShowInputAsync("Save your session", "enter name");
 
             var id = dbHandler.InsertSessionToTable(session);
             //add to session
@@ -114,6 +114,7 @@ namespace SessionCacher
         private void refreshCurrentSession()
         {
             OpenedPrograms.ItemsSource = GetCurrentSession().listOfPrograms;
+            SavedSessions.SelectedItem = -1;
         }
 
         // EVENTS.
@@ -178,13 +179,24 @@ namespace SessionCacher
         {
             //GetIndex of item. Tricky...
             OpenedPrograms.SelectedIndex = findIndexOfListViewItem(sender);
-
             var i = SavedSessions.SelectedIndex;
             var item = OpenedPrograms.SelectedItem as Program;
 
-            dbHandler.DeleteProgram(item);
-            refreshSessions();
-            SavedSessions.SelectedIndex = i;
+            if (SavedSessions.SelectedIndex == -1)
+            {
+                //TODO LETS MAKE THIS REMOVING FROM CURRENT SESSION WORK.
+                var newSession = GetCurrentSession();
+                newSession.listOfPrograms.RemoveAt(OpenedPrograms.SelectedIndex);
+                OpenedPrograms.DataContext = newSession;
+                
+            }
+            else
+            {
+                dbHandler.DeleteProgram(item);
+                refreshSessions();
+                SavedSessions.SelectedIndex = i;
+            }
+
         }
 
         private void RemoveSession_OnClick(object sender, RoutedEventArgs e)
