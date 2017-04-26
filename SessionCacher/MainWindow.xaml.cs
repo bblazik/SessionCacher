@@ -40,6 +40,7 @@ namespace SessionCacher
         private List<Session> sessions;
         private Session undoSession;
         //TODO OBSERVABLE COLLECTION + DATABINDING!
+        //TODO GOOD RESIZING
         public MainWindow()
         {
             InitializeComponent();
@@ -49,17 +50,12 @@ namespace SessionCacher
 
         public void refreshSessions()
         {
-            sessions = new List<Session>();
+            //Get new data
             CurrentSession.DataContext = GetCurrentSession();
-            
-            sessions.AddRange(getSessionsFromDB());
+            sessions = dbHandler.GetSessionsWithProgramList();
+            //Apply data.
             SavedSessions.ItemsSource = sessions;
             refreshCurrentSession();
-        }
-
-        public List<Session> getSessionsFromDB()
-        {
-            return dbHandler.GetSessionsWithProgramList();
         }
 
         public Session GetCurrentSession()
@@ -135,6 +131,7 @@ namespace SessionCacher
         private void SavedSessions_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var index = SavedSessions.SelectedIndex;
+            if (index == -1) return;
             OpenedPrograms.ItemsSource = sessions[index].listOfPrograms;
         }
 
@@ -175,6 +172,36 @@ namespace SessionCacher
         private void CurrentSession_OnClick(object sender, RoutedEventArgs e)
         {
             refreshCurrentSession();
+        }
+
+        private void RemovePrograms_OnClick(object sender, RoutedEventArgs e)
+        {
+            //GetIndex of item. Tricky...
+            OpenedPrograms.SelectedIndex = findIndexOfListViewItem(sender);
+
+            var i = SavedSessions.SelectedIndex;
+            var item = OpenedPrograms.SelectedItem as Program;
+
+            dbHandler.DeleteProgram(item);
+            refreshSessions();
+            SavedSessions.SelectedIndex = i;
+        }
+
+        private void RemoveSession_OnClick(object sender, RoutedEventArgs e)
+        {
+            SavedSessions.SelectedIndex = findIndexOfListViewItem(sender);
+            var item = SavedSessions.SelectedItem as Session;
+            dbHandler.DeleteSession(item);
+            refreshSessions();
+        }
+
+        private int findIndexOfListViewItem(Object sender)
+        {
+            var s = sender as Button;
+            var it = s.TryFindParent<ListViewItem>();
+            ListView listView = ItemsControl.ItemsControlFromItemContainer(it) as ListView;
+            int ind = listView.ItemContainerGenerator.IndexFromContainer(it);
+            return ind;
         }
     }
 }

@@ -21,6 +21,15 @@ namespace SessionCacher
             Arguments = arguments;
         }
 
+        public Program(string id, string name, string path, string arguments, int sessionId)
+        {
+            this.id = id;
+            Name = name;
+            Path = path;
+            Arguments = arguments;
+            SessionID = sessionId;
+        }
+
         public Program(string name, string path, string arguments, int sessionId)
         {
             Name = name;
